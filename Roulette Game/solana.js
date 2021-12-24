@@ -3,20 +3,25 @@ const
     Connection,
     PublicKey,
     clusterApiUrl,
+    sendAndConfirmTransaction,
     Keypair,
     LAMPORTS_PER_SOL,
+    SystemProgram,
     Transaction,
     Account,
 } = require("@solana/web3.js");
 
-//Generating a new wallet keypair
-const newPair = new Keypair();//newPair INstance holds public key and Secret Key.
-console.log(newPair);
+// //Generating a new wallet keypair
+// const newPair = Keypair.generate();//newPair INstance holds public key and Secret Key.
+// console.log(newPair);
+// console.log("---New Key PAir Genra--");
 
-// Store Private and Public Key
-const publicKey = new PublicKey(newPair._keypair.publicKey).toString();// We store the publicKey in a variable of type string
-// secretKey is of type Uint8Array(length == 64)
-const secretKey = newPair._keypair.secretKey;// We Repeat the Process for the Secret key
+// // Store Private and Public Key
+// const publicKey = new PublicKey(newPair._keypair.publicKey).toString();// We store the publicKey in a variable of type string
+// // secretKey is of type Uint8Array(length == 64)
+// const secretKey = newPair._keypair.secretKey;// We Repeat the Process for the Secret key
+// console.log("Public Key = ", publicKey);
+// console.log("secret Key = ", secretKey);
 
 // Creates a connection object that we will use to get the balance
 // clusterApiUrl provides us a url for devnet that we pass to our connection object so that we get details of devnet
@@ -46,15 +51,16 @@ async function airDropSol(amount_in_sol, address)
     {
         const publicKey = new PublicKey(address);
         const amount_in_lamport = amount_in_sol * LAMPORTS_PER_SOL;
-        console.log({amount_in_lamport});
 
         const balance_before_airdrop = await getWalletBalance(address);
-        console.log(`Balance Before Airdrop for Address ${address} = ${balance_before_airdrop} SOL`);
 
         const tx = await connection.requestAirdrop(publicKey, amount_in_lamport);
-        
-        const balance_after_airdrop = await getWalletBalance(address);
-        console.log(`Balance After Airdrop For Address ${address} = ${balance_after_airdrop} SOL`);
+        await connection.confirmTransaction(tx);
+
+
+        let balance_after_airdrop = await getWalletBalance(address);
+        balance_after_airdrop /= LAMPORTS_PER_SOL;
+
     }
     catch (error)
     {
@@ -62,15 +68,15 @@ async function airDropSol(amount_in_sol, address)
     }
 }
 
-async function transferSOL(from, to, transferAmt)
+async function transferSOL(from, to, transferAmt, keypairOfSender)
 {
     try
     {
-        const fromPubkeyVar = new PublicKey(from.publicKey.toString());
-        const toPubkeyVar = new PublicKey(to.publicKey.toString());
+        const fromPubkeyVar = new PublicKey(from);
+        const toPubkeyVar = new PublicKey(to);
     // Create an Empty Transaction Object
-        const transaction = new web3.Transaction().add(
-            web3.SystemProgram.transfer(
+        const transaction = new Transaction().add(
+            SystemProgram.transfer(
                 {
                     fromPubkey : fromPubkeyVar,
                     toPubkey : toPubkeyVar,
@@ -79,13 +85,16 @@ async function transferSOL(from, to, transferAmt)
             )//SystemProgram.transfer is responsible for transfering funds from one account to another
         );
 
-// Sign Transaction With Secret KEy
-        const signature = await web3.sendAndConfirmTransaction(
+        if (transaction) {console.log("Transaction Completed Succesfully");}
+        else {console.log("Transaction failed successfully");}
+
+    // Sign Transaction With Secret KEy
+        const signature = await sendAndConfirmTransaction(
             connection, //the connection instance
             transaction, //the transaction constant created at the top
-            [from] //the wallet instance of all the signers for the transaction
+            [keypairOfSender] //the wallet instance of all the signers for the transaction
         );
-        console.log("Secret Key is ", signature);
+
         return signature;
     }
     catch (error)
