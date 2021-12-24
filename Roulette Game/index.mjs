@@ -18,8 +18,9 @@ const playerGenaratesKeypair = web3.Keypair.generate();
 
 // Generate Program And PLayer KEYS here
 // In Real Application, use a Secret File and remember to include it in the .gitignore
+// We store the publicKey in a variable of type string
+const programPublicKey = new web3.PublicKey(programGenaratesKeypair._keypair.publicKey).toString();
 
-const programPublicKey = new web3.PublicKey(programGenaratesKeypair._keypair.publicKey).toString();// We store the publicKey in a variable of type string
 // secretKey is of type Uint8Array(length == 64)
 const programSecretKey = programGenaratesKeypair._keypair.secretKey;// We Repeat the Process for the Secret key
 
@@ -32,7 +33,7 @@ const playerKeypair = playerPublicKey;
 
 
 
-console.log("My first NodeJS application");
+console.log(chalk.yellow("-----------------------My first NodeJS application-------------------"));
 
 
 const connection = new web3.Connection(web3.clusterApiUrl("devnet"),"confirmed");
@@ -94,7 +95,7 @@ async function RouletteGame()
     }
     
     
-    log(chalk.bold(`Transferring ${Amount} Sol to the Game.`));
+    log(chalk.bold.cyanBright(`Transferring ${Amount} Sol to the Game.`));
     const transactionSignature = await transferSOL(playerPublicKey, programPublicKey, Amount, playerGenaratesKeypair);
     log(chalk.greenBright('Signature of payment for playing the game: ', transactionSignature));
     log(chalk.blueBright("Check https://explorer.solana.com/?cluster=devnet to Confirm"));

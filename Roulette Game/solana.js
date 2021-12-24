@@ -11,20 +11,7 @@ const
     Account,
 } = require("@solana/web3.js");
 
-// //Generating a new wallet keypair
-// const newPair = Keypair.generate();//newPair INstance holds public key and Secret Key.
-// console.log(newPair);
-// console.log("---New Key PAir Genra--");
 
-// // Store Private and Public Key
-// const publicKey = new PublicKey(newPair._keypair.publicKey).toString();// We store the publicKey in a variable of type string
-// // secretKey is of type Uint8Array(length == 64)
-// const secretKey = newPair._keypair.secretKey;// We Repeat the Process for the Secret key
-// console.log("Public Key = ", publicKey);
-// console.log("secret Key = ", secretKey);
-
-// Creates a connection object that we will use to get the balance
-// clusterApiUrl provides us a url for devnet that we pass to our connection object so that we get details of devnet
 const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
 
 // Get The Wallet's Balance
@@ -86,7 +73,7 @@ async function transferSOL(from, to, transferAmt, keypairOfSender)
         );
 
         if (transaction) {console.log("Transaction Completed Succesfully");}
-        else {console.log("Transaction failed successfully");}
+        else {console.log(("Transaction failed successfully"));}
 
     // Sign Transaction With Secret KEy
         const signature = await sendAndConfirmTransaction(
