@@ -5,7 +5,9 @@ import
 {
     getReturnAmount,
     totalAmtToBePaid,
-    randomNumber
+    randomNumber,
+    returnPlayerSecretKey,
+    returnProgramSecretKey
 } from './helper.js';
 import
 {
@@ -16,22 +18,22 @@ import
 const programGenaratesKeypair = web3.Keypair.generate();
 const playerGenaratesKeypair = web3.Keypair.generate();
 
-// Generate Program And PLayer KEYS here
-// In Real Application, use a Secret File and remember to include it in the .gitignore
-// We store the publicKey in a variable of type string
-const programPublicKey = new web3.PublicKey(programGenaratesKeypair._keypair.publicKey).toString();
 
-// secretKey is of type Uint8Array(length == 64)
-const programSecretKey = programGenaratesKeypair._keypair.secretKey;// We Repeat the Process for the Secret key
+const programSecretKey =  await returnProgramSecretKey();// 3w5i8wfDZ9MbfrRf2Av17HpdqfqaekFstSxXhvNiKnJY
+console.log(`program secret = `, programSecretKey);
+const programWalletSeed = programSecretKey.slice(0, 32);
+const programKeypair = await web3.Keypair.fromSeed(Uint8Array.from(programWalletSeed));
+const programPublicKey = await new web3.PublicKey(programKeypair._keypair.publicKey).toString();
 
-const playerPublicKey = new web3.PublicKey(playerGenaratesKeypair._keypair.publicKey).toString();// We store the publicKey in a variable of type string
-// secretKey is of type Uint8Array(length == 64)
-const playerSecretKey = playerGenaratesKeypair._keypair.secretKey;// We Repeat the Process for the Secret key
+console.log(`Program Public Address = `, programPublicKey);
+ 
+const playerSecretKey = await returnPlayerSecretKey();//  ABW7kPeXpjWgmVnm9VifXULzxMk4YoYndUY3wosmfrhi 
+console.log(`player secret = `, playerSecretKey);
+const playerWalletSeed = playerSecretKey.slice(0, 32);
+const playerKeypair = await web3.Keypair.fromSeed(Uint8Array.from(playerWalletSeed));
+const playerPublicKey = await new web3.PublicKey(playerKeypair._keypair.publicKey).toString();
 
-const programKeypair = programPublicKey;
-const playerKeypair = playerPublicKey;
-
-
+console.log(`Player Public Address = `, playerPublicKey);
 
 console.log(chalk.yellow("-----------------------My first NodeJS application-------------------"));
 
@@ -96,7 +98,7 @@ async function RouletteGame()
     
     
     log(chalk.bold.cyanBright(`Transferring ${Amount} Sol to the Game.`));
-    const transactionSignature = await transferSOL(playerPublicKey, programPublicKey, Amount, playerGenaratesKeypair);
+    const transactionSignature = await transferSOL(playerPublicKey, programPublicKey, Amount, playerKeypair);
     log(chalk.greenBright('Signature of payment for playing the game: ', transactionSignature));
     log(chalk.blueBright("Check https://explorer.solana.com/?cluster=devnet to Confirm"));
 
@@ -122,16 +124,16 @@ async function RouletteGame()
     }
     log(chalk.green(`Your Guess Is Absolutely Correct. Your Reward Will Be transferred to you Immediately`));
 
-    const winningTxSignature = await transferSOL(programPublicKey, playerPublicKey, winningPrice, programGenaratesKeypair);
+    const winningTxSignature = await transferSOL(programPublicKey, playerPublicKey, winningPrice, programKeypair);
     log(chalk.greenBright('Winning transaction signature: ', winningTxSignature));
     log(chalk.blueBright("Check https://explorer.solana.com/?cluster=devnet to Confirm"));
 
 }  
-    // Do AirDrop So Player can have enough funds
-    const playerAirDrop = await airDropSol(2, playerPublicKey);
- 
+// Do AirDrop So Player can have enough funds to play
+const playerAirDrop = await airDropSol(2, playerPublicKey);
 
-    await RouletteGame();
+
+await RouletteGame();
 
 
 
