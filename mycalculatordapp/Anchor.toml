@@ -1,0 +1,12 @@
+[programs.localnet]
+mycalculatordapp = "8eTrVGm3wKUBYzCifTyDAAk3YiuMYbWCCJRbdYMf3i4s"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "localnet"
+wallet = "/home/chinedum/.config/solana/id.json"
+
+[scripts]
+test = "yarn run mocha -t 1000000 tests/"
