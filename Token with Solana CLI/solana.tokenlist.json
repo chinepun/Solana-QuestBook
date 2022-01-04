@@ -1,0 +1,14 @@
+{
+    "chainId":101,
+    "address":"your token address",
+    "symbol":"your token symbol",
+    "name":"Token Name",
+    "decimals":"<number of decimals your token supports>",
+    "logoURI":"the CDN link to your token's image",
+    "tags":[
+       "tags_if_any"
+    ],
+    "extensions":{
+ 
+    }
+ }
