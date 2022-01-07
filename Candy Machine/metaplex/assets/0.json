@@ -1,0 +1,45 @@
+{
+    "name": "My First NFT",
+    "symbol": "MFN",
+    "description": "Chinepun NFT",
+    "seller_fee_basis_points": 500,
+    "image": "0.png",
+    "attributes":
+    [
+        {
+            "trait_type": "eyes",
+            "value": "blue"
+        },
+        {
+            "trait_type": "shirt",
+            "value": "$shirt"
+        },
+        {
+            "trait_type": "equipment",
+            "value": "$equipment"
+        }
+    ],
+    "collection":
+    {
+        "name": "Chinepun NFT S1",
+        "family": "Chinepun NFT"
+    },
+    "properties":
+    {
+        "files":
+        [
+            {
+                "uri": "image.png",
+                "type": "image/png"
+            }
+        ],
+        "category": "image",
+        "creators":
+        [
+            {
+                "address": "GkPdSq1LMrJDGHrxdpTntFuhkrjmBm6RyJCSWPGSZg8J",
+                "share": 100
+            }
+        ]
+    }
+}
