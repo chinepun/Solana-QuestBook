@@ -1,0 +1,5 @@
+ts-node js/packages/cli/src/candy-machine-v2-cli.ts upload -e devnet -k ~/.config/solana/id.json  -cp cmsetup.json -c congigcache  ./assets/ 
+
+ts-node js/packages/cli/src/candy-machine-v2-cli.ts verify_upload -e devnet -k ~/.config/solana/id.json  -cp cmsetup.json -c congigcache
+
+ts-node src/fair-launch.ts new_fair_launch --env devnet --keypair ~/.config/solana/id.json --uuid "test00" --fee 0.23 --number-of-tokens 1 -pos "10 Jan 2022 18:47:00 GMT" -poe "11 Jan 2022 00:00:00 GMT" 
